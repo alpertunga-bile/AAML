@@ -8,10 +8,15 @@ class Texture:
             exit(0)
 
         self.image = Image.open(texture_path)
+
+        if self.image.mode == "RGB":
+            self.image = self.image.convert("RGBA")
+
         self.pixels = self.image.load()
         self.width = self.image.width
         self.height = self.image.height
         self.mode = self.image.mode
+            
 
     def __del__(self):
         if(self.image is None):
