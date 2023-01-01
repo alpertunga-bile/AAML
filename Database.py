@@ -2,6 +2,7 @@ import pandas as pd
 import os
 from zipfile import ZipFile
 from zipfile import ZIP_DEFLATED
+from tqdm import tqdm
 
 class Database:
     def __init__(self, database_path):
@@ -31,14 +32,12 @@ class Database:
         os.remove('dataset.csv')
 
     def Save(self):
+        print("Saving The Dataset ...")
         self.dataframe.to_csv('dataset.csv')
-        self.dataframe.to_excel('dataset.xlsx')
         zipObject = ZipFile('dataset.zip', 'w', ZIP_DEFLATED)
         zipObject.write('dataset.csv', compress_type=ZIP_DEFLATED)
-        zipObject.write('dataset.xlsx', compress_type=ZIP_DEFLATED)
         zipObject.close()
         os.remove('dataset.csv')
-        os.remove('dataset.xlsx')
 
     def DropDuplicates(self):
         self.dataframe = self.dataframe.drop_duplicates().reset_index(drop=True)
@@ -46,46 +45,54 @@ class Database:
     def AppendRGBA(self, pixelList):
         if(self.dataframe is None):
             return
+        
+        temp_dict = {
+            "top_left_r": pixelList[0],
+            "top_left_g": pixelList[1],
+            "top_left_b": pixelList[2],
+            "top_left_a": pixelList[3],
+            "top_r": pixelList[4],
+            "top_g": pixelList[5],
+            "top_b": pixelList[6],
+            "top_a": pixelList[7],
+            "top_right_r": pixelList[8],
+            "top_right_b": pixelList[9],
+            "top_right_g": pixelList[10],
+            "top_right_a": pixelList[11],
+            "left_r": pixelList[12],
+            "left_b": pixelList[13],
+            "left_g": pixelList[14],
+            "left_a": pixelList[15], 
+            "right_r": pixelList[16],
+            "right_g": pixelList[17],
+            "right_b": pixelList[18],
+            "right_a": pixelList[19],
+            "bottom_left_r": pixelList[20],
+            "bottom_left_g": pixelList[21],
+            "bottom_left_b": pixelList[22],
+            "bottom_left_a": pixelList[23],
+            "bottom_r": pixelList[24],
+            "bottom_g": pixelList[25],
+            "bottom_b": pixelList[26],
+            "bottom_a": pixelList[27],
+            "bottom_right_r": pixelList[28],
+            "bottom_right_g": pixelList[29],
+            "bottom_right_b": pixelList[30],
+            "bottom_right_a": pixelList[31],
+            "middle_r": pixelList[32],
+            "middle_g": pixelList[33],
+            "middle_b": pixelList[34],
+            "middle_a": pixelList[35]
+        }
 
-        temp_df = pd.DataFrame({
-            "top_left_r": [pixelList[0]],
-            "top_left_g": [pixelList[1]],
-            "top_left_b": [pixelList[2]],
-            "top_left_a": [pixelList[3]],
-            "top_r": [pixelList[4]],
-            "top_g": [pixelList[5]],
-            "top_b": [pixelList[6]],
-            "top_a": [pixelList[7]],
-            "top_right_r": [pixelList[8]],
-            "top_right_b": [pixelList[9]],
-            "top_right_g": [pixelList[10]],
-            "top_right_a": [pixelList[11]],
-            "left_r": [pixelList[12]],
-            "left_b": [pixelList[13]],
-            "left_g": [pixelList[14]],
-            "left_a": [pixelList[15]], 
-            "right_r": [pixelList[16]],
-            "right_g": [pixelList[17]],
-            "right_b": [pixelList[18]],
-            "right_a": [pixelList[19]],
-            "bottom_left_r": [pixelList[20]],
-            "bottom_left_g": [pixelList[21]],
-            "bottom_left_b": [pixelList[22]],
-            "bottom_left_a": [pixelList[23]],
-            "bottom_r": [pixelList[24]],
-            "bottom_g": [pixelList[25]],
-            "bottom_b": [pixelList[26]],
-            "bottom_a": [pixelList[27]],
-            "bottom_right_r": [pixelList[28]],
-            "bottom_right_g": [pixelList[29]],
-            "bottom_right_b": [pixelList[30]],
-            "bottom_right_a": [pixelList[31]],
-            "middle_r": [pixelList[32]],
-            "middle_g": [pixelList[33]],
-            "middle_b": [pixelList[34]],
-            "middle_a": [pixelList[35]]
-        })
+        self.dictionary_list.append(temp_dict)
 
-        self.dataframe = pd.concat([self.dataframe, temp_df], ignore_index=True)
+    def AddToDataset(self):
+        print("Adding Pixels To Dataset ...")
+        self.dataframe = pd.DataFrame.from_dict(self.dictionary_list)
+        self.dictionary_list.clear()
+        print("Clearing Duplicates ...")
+        self.DropDuplicates()
 
     dataframe = None
+    dictionary_list = []

@@ -31,8 +31,8 @@ class AAML:
         return False
 
     def WriteToUsedFile(self, name):
-        file = open(self.texture_base_file, "used.txt", "a")
-        file.writelines(name)
+        file = open(os.path.join(self.texture_base_file, "used.txt"), "a")
+        file.writelines(name + '\n')
         file.close()
     
     def AddToDataset(self):
@@ -42,11 +42,17 @@ class AAML:
 
         print(f"{len(self.texture_paths)} image(s) are found ...")
 
+        if(os.path.exists(os.path.join(self.texture_base_file, "used.txt")) is False):
+            file = open(os.path.join(self.texture_base_file, "used.txt"), "w")
+            file.close()
+
         file = open(os.path.join(self.texture_base_file, "used.txt"), "r")
         usedTextureNames = file.readlines()
         file.close()
+        count = 1
 
         for texture_path in self.texture_paths:
+            print(f"{count} / {len(self.texture_paths)} In Progress ...")
             if self.CheckIfTextureUsed(usedTextureNames, texture_path) is True:
                 print(f"{texture_path} is used for this database | Skipping ...")
                 continue
@@ -56,24 +62,24 @@ class AAML:
             
             for y in tqdm(range(1, texture.height - 1), desc=f"{texture_path}"):
                 for x in range(1, texture.width - 1):
-                    pixelList.extend(texture.GetPixel(x - 1, y - 1))
-                    pixelList.extend(texture.GetPixel(x, y - 1))
-                    pixelList.extend(texture.GetPixel(x - 1, y - 1))
-                    pixelList.extend(texture.GetPixel(x, y - 1))
-                    pixelList.extend(texture.GetPixel(x + 1, y - 1))
-                    pixelList.extend(texture.GetPixel(x - 1, y))
-                    pixelList.extend(texture.GetPixel(x + 1, y))
-                    pixelList.extend(texture.GetPixel(x + 1, y + 1))
-                    pixelList.extend(texture.GetPixel(x, y + 1))
-                    pixelList.extend(texture.GetPixel(x + 1, y + 1))
-                    pixelList.extend(texture.GetPixel(x, y))
+                    pixelList.extend(texture.pixels[x - 1, y - 1])
+                    pixelList.extend(texture.pixels[x    , y - 1])
+                    pixelList.extend(texture.pixels[x - 1, y - 1])
+                    pixelList.extend(texture.pixels[x    , y - 1])
+                    pixelList.extend(texture.pixels[x + 1, y - 1])
+                    pixelList.extend(texture.pixels[x - 1, y])
+                    pixelList.extend(texture.pixels[x + 1, y])
+                    pixelList.extend(texture.pixels[x + 1, y + 1])
+                    pixelList.extend(texture.pixels[x    , y + 1])
+                    pixelList.extend(texture.pixels[x + 1, y + 1])
+                    pixelList.extend(texture.pixels[x    , y])
 
                     self.database.AppendRGBA(pixelList)
-
                     pixelList.clear()
 
-            self.database.DropDuplicates()
+            self.database.AddToDataset()
             print("DONE!!!")
+            count = count + 1
             self.WriteToUsedFile(texture_path)
             
 
