@@ -35,7 +35,7 @@ class AAML:
         file.writelines(name + '\n')
         file.close()
     
-    def AddToDataset(self):
+    def AddToDataset(self, delete=False):
         if self.database is None:
             print("Database variable is None")
             return
@@ -53,8 +53,12 @@ class AAML:
 
         for texture_path in self.texture_paths:
             print(f"{count} / {len(self.texture_paths)} In Progress ...")
+            count = count + 1
             if self.CheckIfTextureUsed(usedTextureNames, texture_path) is True:
                 print(f"{texture_path} is used for this database | Skipping ...")
+                if delete:
+                    print(f"Deleting {texture_path}...")
+                    os.remove(texture_path)
                 continue
 
             texture = Texture(texture_path)
@@ -79,7 +83,6 @@ class AAML:
 
             self.database.AddToDataset()
             print("DONE!!!")
-            count = count + 1
             self.WriteToUsedFile(texture_path)
             
 
