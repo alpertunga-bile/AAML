@@ -7,12 +7,20 @@ def update_dataset(texture_base_file = "textures", deleteImages=False):
     aaml.AddToDataset(delete=deleteImages)
     aaml.Save()
 
+def start_test():
+    aaml = AAML()
+    aaml.StartMLTest()
+    
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--delete_used", help="Delete the used images based on used.txt in images folder", action='store_true')
     parser.add_argument("--update_dataset", help="Create or update the dataset with given image folder", action='store_true')
     parser.add_argument("--image_file", help="Base image file, default is textures", default="textures", type=str, action='store')
+    parser.add_argument("--start_test", help="Start to train and test machine learning models", action='store_true')
     args = parser.parse_args()
 
     if args.update_dataset:
         update_dataset(args.image_file, args.delete_used)
+    elif args.start_test:
+        start_test()

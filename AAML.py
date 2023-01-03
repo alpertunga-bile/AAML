@@ -2,11 +2,14 @@ from Database import Database
 from Texture import Texture
 import os
 from tqdm import tqdm
+from statistics import mean
+
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.neighbors import KNeighborsRegressor
+from tabulate import tabulate
 
 class AAML:
-    def __init__(self) -> None:
-        pass
-
     def __init__(self, texture_base_path_file, zip_file):
         fileList = os.listdir(texture_base_path_file)
         for file in fileList:
@@ -20,7 +23,51 @@ class AAML:
 
         self.database = Database(zip_file)
         self.texture_base_file = texture_base_path_file
-    
+
+    def __init__(self):
+        self.database = Database("dataset.zip")
+
+    # TEST Functions
+
+    def CalculateError(self, y_test, predictions):
+        temp_list = None
+        error_list = []
+        for index in range(0, y_test.shape[0]):
+            temp_list = y_test.iloc[index].values.flatten().tolist()
+            r_error = (predictions[index][0] - temp_list[0]) / (temp_list[0] + 1)
+            g_error = (predictions[index][1] - temp_list[1]) / (temp_list[1] + 1)
+            b_error = (predictions[index][2] - temp_list[2]) / (temp_list[2] + 1)
+            a_error = (predictions[index][3] - temp_list[3]) / (temp_list[3] + 1)
+            total_error = (r_error + g_error + b_error + a_error) / 4.0
+            error_list.append(total_error)
+
+        return mean(error_list)
+
+    def DoTest(self, model, X, Y):
+        mask = np.random.rand(len(X)) <= 0.8
+        x_train = X[mask]
+        x_test = X[~mask]
+        y_train = Y[mask]
+        y_test = Y[~mask]
+
+        model.fit(x_train, y_train)
+        predictions = model.predict(x_test)
+        image_error = self.CalculateError(y_test, predictions)
+
+        return image_error
+
+    def StartMLTest(self):
+        Y = self.database.dataframe.iloc[:, 32:36]
+        X = self.database.dataframe.iloc[:, 0:32]
+
+        scores = []
+        scores.append(["Linear Regression", self.DoTest(LinearRegression(), X, Y)])
+
+        print("#######################################################\nTest Results\n#######################################################")
+        print(tabulate(scores, headers=["Tests", "Errors"]))
+
+    # Update Dataset Functions
+
     def Save(self):
         self.database.Save()
 
@@ -54,6 +101,7 @@ class AAML:
         for texture_path in self.texture_paths:
             print(f"{count} / {len(self.texture_paths)} In Progress ...")
             count = count + 1
+            
             if self.CheckIfTextureUsed(usedTextureNames, texture_path) is True:
                 print(f"{texture_path} is used for this database | Skipping ...")
                 if delete:

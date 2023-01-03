@@ -6,7 +6,7 @@
 
 - [x] At this point, it is important to enlarge the data set. After that, training will be done using the machine learning model and dataset and tests will be done on many pictures.
 
-## Labels
+## Attributes
 
 - top_left_r
 - top_left_g
@@ -44,3 +44,6 @@
 - middle_g
 - middle_b
 - middle_a
+
+## Latest Error Score
+
