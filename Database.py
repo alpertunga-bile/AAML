@@ -45,6 +45,10 @@ class Database:
     def AppendRGBA(self, pixelList):
         if(self.dataframe is None):
             return
+
+        if len(pixelList) != 36:
+            print("PixelList length is not 36")
+            exit(0)
         
         temp_dict = {
             "top_left_r": pixelList[0],

@@ -10,7 +10,11 @@ from sklearn.neighbors import KNeighborsRegressor
 from tabulate import tabulate
 
 class AAML:
-    def __init__(self, texture_base_path_file, zip_file):
+    def __init__(self, texture_base_path_file = "", zip_file = ""):
+        if texture_base_path_file == "":
+            self.database = Database(zip_file)
+            return
+
         fileList = os.listdir(texture_base_path_file)
         for file in fileList:
             split = os.path.splitext(file)
@@ -23,9 +27,6 @@ class AAML:
 
         self.database = Database(zip_file)
         self.texture_base_file = texture_base_path_file
-
-    def __init__(self):
-        self.database = Database("dataset.zip")
 
     # TEST Functions
 
@@ -114,17 +115,15 @@ class AAML:
             
             for y in tqdm(range(1, texture.height - 1), desc=f"{texture_path}"):
                 for x in range(1, texture.width - 1):
-                    pixelList.extend(texture.pixels[x - 1, y - 1])
-                    pixelList.extend(texture.pixels[x    , y - 1])
-                    pixelList.extend(texture.pixels[x - 1, y - 1])
-                    pixelList.extend(texture.pixels[x    , y - 1])
-                    pixelList.extend(texture.pixels[x + 1, y - 1])
-                    pixelList.extend(texture.pixels[x - 1, y])
-                    pixelList.extend(texture.pixels[x + 1, y])
-                    pixelList.extend(texture.pixels[x + 1, y + 1])
-                    pixelList.extend(texture.pixels[x    , y + 1])
-                    pixelList.extend(texture.pixels[x + 1, y + 1])
-                    pixelList.extend(texture.pixels[x    , y])
+                    pixelList.extend(texture.pixels[x - 1, y - 1]) # top left
+                    pixelList.extend(texture.pixels[x    , y - 1]) # top 
+                    pixelList.extend(texture.pixels[x + 1, y - 1]) # top right 
+                    pixelList.extend(texture.pixels[x - 1, y])     # left
+                    pixelList.extend(texture.pixels[x + 1, y])     # right
+                    pixelList.extend(texture.pixels[x - 1, y + 1]) # bottom left
+                    pixelList.extend(texture.pixels[x    , y + 1]) # bottom 
+                    pixelList.extend(texture.pixels[x + 1, y + 1]) # bottom right
+                    pixelList.extend(texture.pixels[x    , y])     # middle
 
                     self.database.AppendRGBA(pixelList)
                     pixelList.clear()
