@@ -47,3 +47,12 @@
 
 ## Latest Error Score
 
+## Results
+
+Original                   | Row By Row by 3x3 filter  |  Full Image by 3x3 filter
+:-------------------------:|:-------------------------:|:-------------------------:
+![test](https://user-images.githubusercontent.com/76731692/210861435-ad89748d-e9e8-4989-bbd5-3ca8c0e45ca6.jpg) | ![index](https://user-images.githubusercontent.com/76731692/210861766-365dc726-e232-4cd3-ba08-71717fb83706.png)  |  ![image](https://user-images.githubusercontent.com/76731692/210861126-bf61f96d-1e83-4475-8601-51d97221b9e5.png)
+
+- At the row by row version, model predicts one row and changes the pixel values and predict below row. This can be useful because when model is predicting it uses upper predicted row.
+
+- At the full image version, model predicts with original image for all pixel values.
