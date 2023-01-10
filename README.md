@@ -53,7 +53,7 @@
 
 Original                   | Row By Row by 3x3 filter  |  Full Image by 3x3 filter
 :-------------------------:|:-------------------------:|:-------------------------:
-![test](https://user-images.githubusercontent.com/76731692/210861435-ad89748d-e9e8-4989-bbd5-3ca8c0e45ca6.jpg) | 
+![test](https://user-images.githubusercontent.com/76731692/210861435-ad89748d-e9e8-4989-bbd5-3ca8c0e45ca6.jpg) | ![index](https://user-images.githubusercontent.com/76731692/211661444-db05ad67-578a-4871-86e8-bd6ea98cab75.png) | ![index](https://user-images.githubusercontent.com/76731692/211661555-fb05eabb-e888-483b-b156-9612e9a09627.png)
 
 - Latest Result Date : 05/01/2023
 
