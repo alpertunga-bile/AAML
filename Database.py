@@ -3,6 +3,7 @@ import os
 from zipfile import ZipFile
 from zipfile import ZIP_DEFLATED
 from tqdm import tqdm
+import numpy as np
 
 class Database:
     def __init__(self, database_path):
@@ -18,7 +19,7 @@ class Database:
                'bottom_r', 'bottom_g', 'bottom_b', 'bottom_a',
                'bottom_right_r', 'bottom_right_g', 'bottom_right_b', 'bottom_right_a',
                'middle_r', 'middle_g', 'middle_b', 'middle_a'   
-               ])
+               ], dtype=np.uint8)
             return
 
         print("Found zip file extracting the dataset")
@@ -26,7 +27,7 @@ class Database:
             zipObject.extract('dataset.csv', path=os.getcwd())
         zipObject.close()
             
-        self.dataframe = pd.read_csv('dataset.csv')
+        self.dataframe = pd.read_csv('dataset.csv', engine='c',dtype=np.uint8)
         if "Unnamed: 0" in self.dataframe:
             self.dataframe.drop("Unnamed: 0", inplace=True, axis=1)
         os.remove('dataset.csv')
@@ -93,8 +94,10 @@ class Database:
 
     def AddToDataset(self):
         print("Adding Pixels To Dataset ...")
-        self.dataframe = pd.DataFrame.from_dict(self.dictionary_list)
+        temp_dataframe = pd.DataFrame.from_dict(self.dictionary_list, dtype=np.uint8)
         self.dictionary_list.clear()
+        print("Concating Dataframes ...")
+        self.dataframe = pd.concat([self.dataframe, temp_dataframe], axis=0, ignore_index=True)
         print("Clearing Duplicates ...")
         self.DropDuplicates()
 

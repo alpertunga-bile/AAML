@@ -131,7 +131,6 @@ class AAML:
             self.database.AddToDataset()
             print("DONE!!!")
             self.WriteToUsedFile(texture_path)
-            
 
     texture_base_file = None
     texture_paths = []
