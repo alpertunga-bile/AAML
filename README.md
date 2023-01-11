@@ -1,10 +1,12 @@
 # AAML
 
-- [ ] Trying to solve the anti aliasing problem with machine learning models. In this project, 3x3 filter used for prediction the middle pixels RGBA values.
+[Attributes](https://github.com/alpertunga-bile/AAML/edit/master/README.md#attributes) | [Results](https://github.com/alpertunga-bile/AAML/edit/master/README.md#results)
 
-- [x] For this project .png, .jpg and .jpeg image files can be used for the dataset.
+- [ ] Trying to solve the anti-aliasing problem with machine learning models. In this project, a 3x3 filter was used to estimate the middle pixel values based on RGBA. As an alternative research, it is tried to increase the image quality with these models.
 
-- [x] At this point, it is important to enlarge the data set. After that, training will be done using the machine learning model and dataset and tests will be done on many pictures.
+- [x] For this project PNG, JPG and JPEG image files can be used for the dataset.
+
+- [x] At this point, it is important to enlarge the data set. After that, training will be done using the machine learning model and dataset then tests will be done on many pictures.
 
 ## Attributes
 
@@ -45,9 +47,21 @@
 - middle_b
 - middle_a
 
-## Latest Error Score
-
 ## Results
+
+- At the row by row version, model predicts one row and changes the pixel values and predict below row. This can be useful because when model is predicting it uses upper predicted row.
+
+- At the full image version, model predicts with all of the original image's pixel values then changes the pixel values.
+
+---------------------------------------
+
+- Latest Result Date : 11/01/2023
+
+Original                   | Row By Row by 3x3 filter  |  Full Image by 3x3 filter
+:-------------------------:|:-------------------------:|:-------------------------:
+![test](https://user-images.githubusercontent.com/76731692/210861435-ad89748d-e9e8-4989-bbd5-3ca8c0e45ca6.jpg) | ![index](https://user-images.githubusercontent.com/76731692/211912066-fb25fe50-d27d-45ae-bc1c-7b14bb768f7e.png) | ![index](https://user-images.githubusercontent.com/76731692/211912160-c75e4eea-837e-471c-9734-40e67b017c90.png)
+
+---------------------------------------
 
 - Latest Result Date : 10/01/2023
 
@@ -55,12 +69,10 @@ Original                   | Row By Row by 3x3 filter  |  Full Image by 3x3 filt
 :-------------------------:|:-------------------------:|:-------------------------:
 ![test](https://user-images.githubusercontent.com/76731692/210861435-ad89748d-e9e8-4989-bbd5-3ca8c0e45ca6.jpg) | ![index](https://user-images.githubusercontent.com/76731692/211661444-db05ad67-578a-4871-86e8-bd6ea98cab75.png) | ![index](https://user-images.githubusercontent.com/76731692/211661555-fb05eabb-e888-483b-b156-9612e9a09627.png)
 
+---------------------------------------
+
 - Latest Result Date : 05/01/2023
 
 Original                   | Row By Row by 3x3 filter  |  Full Image by 3x3 filter
 :-------------------------:|:-------------------------:|:-------------------------:
 ![test](https://user-images.githubusercontent.com/76731692/210861435-ad89748d-e9e8-4989-bbd5-3ca8c0e45ca6.jpg) | ![index](https://user-images.githubusercontent.com/76731692/210861766-365dc726-e232-4cd3-ba08-71717fb83706.png)  |  ![image](https://user-images.githubusercontent.com/76731692/210861126-bf61f96d-1e83-4475-8601-51d97221b9e5.png)
-
-- At the row by row version, model predicts one row and changes the pixel values and predict below row. This can be useful because when model is predicting it uses upper predicted row.
-
-- At the full image version, model predicts with original image for all pixel values.
