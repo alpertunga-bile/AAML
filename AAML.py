@@ -12,7 +12,7 @@ from tabulate import tabulate
 class AAML:
     def __init__(self, texture_base_path_file = "", zip_file = ""):
         if texture_base_path_file == "":
-            self.database = Database(zip_file)
+            self.database = Database('dataset.zip')
             return
 
         fileList = os.listdir(texture_base_path_file)

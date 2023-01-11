@@ -8,7 +8,7 @@ import numpy as np
 class Database:
     def __init__(self, database_path):
         if(os.path.exists(database_path) == False or database_path == ""):
-            print(f"Cannot found {database_path} zip file | Creating empty dataset")
+            print(f"Cannot found {database_path} file | Creating empty dataset")
             self.dataframe = pd.DataFrame(columns=[
                'top_left_r', 'top_left_g', 'top_left_b', 'top_left_a',
                'top_r', 'top_g', 'top_b', 'top_a',
@@ -24,21 +24,23 @@ class Database:
 
         print("Found zip file extracting the dataset")
         with ZipFile(database_path, 'r', ZIP_DEFLATED) as zipObject:
-            zipObject.extract('dataset.csv', path=os.getcwd())
+            zipObject.extract('dataset.pkl', path=os.getcwd())
         zipObject.close()
             
-        self.dataframe = pd.read_csv('dataset.csv', engine='c',dtype=np.uint8)
+        self.dataframe = pd.read_pickle('dataset.pkl', compression='zip')
         if "Unnamed: 0" in self.dataframe:
             self.dataframe.drop("Unnamed: 0", inplace=True, axis=1)
-        os.remove('dataset.csv')
+        os.remove('dataset.pkl')
+
+        self.dataframe = self.dataframe.astype(np.uint8)
 
     def Save(self):
         print("Saving The Dataset ...")
-        self.dataframe.to_csv('dataset.csv')
+        self.dataframe.to_pickle('dataset.pkl', compression='zip')
         zipObject = ZipFile('dataset.zip', 'w', ZIP_DEFLATED)
-        zipObject.write('dataset.csv', compress_type=ZIP_DEFLATED)
+        zipObject.write('dataset.pkl', compress_type=ZIP_DEFLATED)
         zipObject.close()
-        os.remove('dataset.csv')
+        os.remove('dataset.pkl')
 
     def DropDuplicates(self):
         self.dataframe = self.dataframe.drop_duplicates().reset_index(drop=True)
