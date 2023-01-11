@@ -1,6 +1,6 @@
 # AAML
 
-[Attributes](https://github.com/alpertunga-bile/AAML/edit/master/README.md#attributes) | [Results](https://github.com/alpertunga-bile/AAML/edit/master/README.md#results)
+[Attributes](https://github.com/alpertunga-bile/AAML/Attributes) | [Results](https://github.com/alpertunga-bile/AAML/edit/master/README.md#results)
 
 - [ ] Trying to solve the anti-aliasing problem with machine learning models. In this project, a 3x3 filter was used to estimate the middle pixel values based on RGBA. As an alternative research, it is tried to increase the image quality with these models.
 
