@@ -2,7 +2,6 @@ import pandas as pd
 import os
 from zipfile import ZipFile
 from zipfile import ZIP_DEFLATED
-from tqdm import tqdm
 import numpy as np
 
 class Database:
@@ -22,28 +21,37 @@ class Database:
                ], dtype=np.uint8)
             return
 
-        print("Found zip file extracting the dataset")
-        with ZipFile(database_path, 'r', ZIP_DEFLATED) as zipObject:
-            zipObject.extract('dataset.pkl', path=os.getcwd())
+        print("Found zip file | Extracting the dataset")
+        with ZipFile(database_path, 'r', ZIP_DEFLATED, compresslevel=6) as zipObject:
+            zipObject.extractall(path=os.getcwd())
         zipObject.close()
+
+        for file in os.listdir():
+            if ".pkl" in file:
+                self.dataset_name = file
             
-        self.dataframe = pd.read_pickle('dataset.pkl', compression='zip')
+        self.dataframe = pd.read_pickle(self.dataset_name, compression='gzip')
         if "Unnamed: 0" in self.dataframe:
             self.dataframe.drop("Unnamed: 0", inplace=True, axis=1)
-        os.remove('dataset.pkl')
+        if "index" in self.dataframe:
+            self.dataframe.drop("index", inplace=True, axis=1)
 
-        self.dataframe = self.dataframe.astype(np.uint8)
+    def SaveToZip(self):
+        zipObject = ZipFile('dataset.zip', 'w', ZIP_DEFLATED, compresslevel=6)
+        for file in os.listdir():
+            if ".pkl" in file:
+                zipObject.write(file, compress_type=ZIP_DEFLATED, compresslevel=6)
+                os.remove(file)
+        zipObject.close()
 
     def Save(self):
         print("Saving The Dataset ...")
-        self.dataframe.to_pickle('dataset.pkl', compression='zip')
-        zipObject = ZipFile('dataset.zip', 'w', ZIP_DEFLATED)
-        zipObject.write('dataset.pkl', compress_type=ZIP_DEFLATED)
-        zipObject.close()
-        os.remove('dataset.pkl')
+        self.dataframe.to_pickle(self.dataset_name, compression='gzip')
+        self.SaveToZip()
 
     def DropDuplicates(self):
-        self.dataframe = self.dataframe.drop_duplicates().reset_index(drop=True)
+        self.dataframe.drop_duplicates(inplace=True)
+        self.dataframe.reset_index(drop=True, inplace=True)
 
     def AppendRGBA(self, pixelList):
         if(self.dataframe is None):
@@ -104,4 +112,5 @@ class Database:
         self.DropDuplicates()
 
     dataframe = None
+    dataset_name = None
     dictionary_list = []

@@ -6,7 +6,7 @@ from statistics import mean
 
 import numpy as np
 from sklearn.linear_model import LinearRegression
-from sklearn.neighbors import KNeighborsRegressor
+from sklearn.model_selection import train_test_split
 from tabulate import tabulate
 
 class AAML:
@@ -22,7 +22,7 @@ class AAML:
                 self.texture_paths.append(os.path.join(texture_base_path_file, file))
 
         if len(self.texture_paths) == 0:
-            print(f"In {texture_base_path_file}, there are no png files")
+            print(f"In {texture_base_path_file}, there are no image files")
             exit(0)
 
         self.database = Database(zip_file)
@@ -45,11 +45,7 @@ class AAML:
         return mean(error_list)
 
     def DoTest(self, model, X, Y):
-        mask = np.random.rand(len(X)) <= 0.8
-        x_train = X[mask]
-        x_test = X[~mask]
-        y_train = Y[mask]
-        y_test = Y[~mask]
+        x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.3, random_state=123, shuffle=True)
 
         model.fit(x_train, y_train)
         predictions = model.predict(x_test)
@@ -60,6 +56,9 @@ class AAML:
     def StartMLTest(self):
         Y = self.database.dataframe.iloc[:, 32:36]
         X = self.database.dataframe.iloc[:, 0:32]
+
+        X = np.array(X)
+        Y = np.array(Y)
 
         scores = []
         scores.append(["Linear Regression", self.DoTest(LinearRegression(), X, Y)])
@@ -88,6 +87,7 @@ class AAML:
             print("Database variable is None")
             return
 
+        print(f"Adding to {self.database.dataset_name} ...")
         print(f"{len(self.texture_paths)} image(s) are found ...")
 
         if(os.path.exists(os.path.join(self.texture_base_file, "used.txt")) is False):
