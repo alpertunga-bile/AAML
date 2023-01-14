@@ -55,6 +55,15 @@
 
 ---------------------------------------
 
+- Latest Result Date : 15/01/2023
+
+Original                   | Row By Row by 3x3 filter  |  Full Image by 3x3 filter
+:-------------------------:|:-------------------------:|:-------------------------:
+![test](https://user-images.githubusercontent.com/76731692/210861435-ad89748d-e9e8-4989-bbd5-3ca8c0e45ca6.jpg) | ![row](https://user-images.githubusercontent.com/76731692/212498916-35dd40b5-9dcf-4c33-b28b-8bb94e4da7a9.png) | ![full](https://user-images.githubusercontent.com/76731692/212498921-92b83d31-dad2-4cc8-9c4a-9134b6477611.png)
+
+---------------------------------------
+
+
 - Latest Result Date : 11/01/2023
 
 Original                   | Row By Row by 3x3 filter  |  Full Image by 3x3 filter
