@@ -1,6 +1,6 @@
 from AAML import AAML
 import argparse
-import pandas as pd
+from MergeDataset import MergeDataset
 from tqdm import tqdm
 
 def update_dataset(texture_base_file = "textures", deleteImages=False):
@@ -20,6 +20,10 @@ def get_info():
     print(aaml.database.dataframe.head())
 
     aaml.database.SaveToZip()
+
+def merge():
+    merge = MergeDataset()
+    merge.Merge()
 
 def split_whole():
     aaml = AAML()
@@ -60,6 +64,7 @@ if __name__ == "__main__":
     parser.add_argument("--start_test", help="Start to train and test machine learning models", action='store_true')
     parser.add_argument("--get_info", help="Get dataset info", action='store_true')
     parser.add_argument("--split_whole", help="Split whole dataset into pieces", action='store_true')
+    parser.add_argument("--merge", help="Merge the datasets", action='store_true')
     args = parser.parse_args()
 
     if args.update_dataset:
@@ -68,5 +73,7 @@ if __name__ == "__main__":
         start_test()
     elif args.get_info:
         get_info()
-    elif args.split_all:
+    elif args.split_whole:
         split_whole()
+    elif args.merge:
+        merge()

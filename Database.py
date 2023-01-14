@@ -57,7 +57,7 @@ class Database:
         self.SaveToZip()
     
     def CheckDataframe(self):
-        max_row = 20000000
+        max_row = 40000000
         if self.dataframe.shape[0] <= max_row:
             return
         
