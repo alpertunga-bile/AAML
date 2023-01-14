@@ -19,6 +19,7 @@ class Database:
                'bottom_right_r', 'bottom_right_g', 'bottom_right_b', 'bottom_right_a',
                'middle_r', 'middle_g', 'middle_b', 'middle_a'   
                ], dtype=np.uint8)
+            self.dataset_name = 'dataset_1.pkl'
             return
 
         print("Found zip file | Extracting the dataset")
@@ -31,12 +32,18 @@ class Database:
                 self.dataset_name = file
             
         self.dataframe = pd.read_pickle(self.dataset_name, compression='gzip')
+        self.DeleteUnwanteds()
+
+    def DeleteUnwanteds(self):
         if "Unnamed: 0" in self.dataframe:
             self.dataframe.drop("Unnamed: 0", inplace=True, axis=1)
         if "index" in self.dataframe:
             self.dataframe.drop("index", inplace=True, axis=1)
+        if "level_0" in self.dataframe:
+            self.dataframe.drop("level_0", inplace=True, axis=1)
 
     def SaveToZip(self):
+        print("Saving datasets into zip file ...")
         zipObject = ZipFile('dataset.zip', 'w', ZIP_DEFLATED, compresslevel=6)
         for file in os.listdir():
             if ".pkl" in file:
@@ -48,6 +55,29 @@ class Database:
         print("Saving The Dataset ...")
         self.dataframe.to_pickle(self.dataset_name, compression='gzip')
         self.SaveToZip()
+    
+    def CheckDataframe(self):
+        max_row = 20000000
+        if self.dataframe.shape[0] <= max_row:
+            return
+        
+        save_dataframe = self.dataframe.iloc[:max_row, :]
+        current_dataframe = self.dataframe.iloc[max_row:, :]
+        del self.dataframe
+        new_dataset_name = 'dataset_' + str(int(self.dataset_name.split('_')[1][0]) + 1) + '.pkl'
+
+        print(f"Saving {self.dataset_name} ...")
+        save_dataframe.to_pickle(self.dataset_name, compression='gzip')
+        self.dataframe = current_dataframe
+        self.dataframe.reset_index(drop=True, inplace=True)
+        self.dataset_name = new_dataset_name
+        self.DeleteUnwanteds()
+        print(f"Continue with {self.dataset_name} ...")
+        del save_dataframe
+
+    # ---------------------------------------------------------------------------------------
+    # -- Filling Dataset
+    # ---------------------------------------------------------------------------------------
 
     def DropDuplicates(self):
         self.dataframe.drop_duplicates(inplace=True)
@@ -109,7 +139,10 @@ class Database:
         print("Concating Dataframes ...")
         self.dataframe = pd.concat([self.dataframe, temp_dataframe], axis=0, ignore_index=True)
         print("Clearing Duplicates ...")
+        del temp_dataframe
         self.DropDuplicates()
+        self.DeleteUnwanteds()
+        self.CheckDataframe()
 
     dataframe = None
     dataset_name = None

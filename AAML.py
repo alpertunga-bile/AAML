@@ -3,7 +3,7 @@ from Texture import Texture
 import os
 from tqdm import tqdm
 from statistics import mean
-
+import gc
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
@@ -130,7 +130,9 @@ class AAML:
 
             self.database.AddToDataset()
             print("DONE!!!")
+            del texture
             self.WriteToUsedFile(texture_path)
+            gc.collect()
 
     texture_base_file = None
     texture_paths = []
