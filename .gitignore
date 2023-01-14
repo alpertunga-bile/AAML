@@ -132,3 +132,4 @@ textures/
 dataset.zip
 old_dataset/
 *.pkl
+dataset/
