@@ -8,6 +8,8 @@
 
 - [x] At this point, it is important to enlarge the data set. After that, training will be done using the machine learning model and dataset then tests will be done on many pictures.
 
+- [x] Currently "ADAM_RGB" and "model" is trained and the results are taken with "model" at 15/01/2023 and before. The training is ongoing.
+
 ## Attributes
 
 - top_left_r
