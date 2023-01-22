@@ -10,6 +10,8 @@
 
 - [x] Currently "ADAM_RGB" and "model" is trained and the results are taken with "model" at 15/01/2023 and before. The training is ongoing.
 
+- [x] Using Python 3.7.8. Used packages can be found in requirements.txt file.
+
 ## Attributes
 
 - top_left_r
