@@ -6,9 +6,9 @@
 
 - [x] For this project PNG, JPG and JPEG image files can be used for the dataset.
 
-- [x] At this point, it is important to enlarge the data set. After that, training will be done using the machine learning model and dataset then tests will be done on many pictures.
+- [x] At this point, it is important to enlarge the data set. After that, training will be done using the machine learning model and dataset then tests will be done on many pictures. At 28/01/2023, there are nearly 200.000.000 rows of data. The data is splitted into 5 datasets. Each dataset has unique rows in themselves. Therefore each dataset can be used as single datasets. In traning, the datasets are selected as random.   
 
-- [x] Currently "ADAM_RGB" and "model" is trained and the results are taken with "model" at 15/01/2023 and before. The training is ongoing.
+- [x] Currently "ADAM_RGB", "model" and "RMSPROP_RGBA" are trained. The training is ongoing.
 
 - [x] Using Python 3.7.8. Used packages can be found in requirements.txt file.
 
@@ -58,8 +58,15 @@
 - At the full image version, model predicts with all of the original image's pixel values then changes the pixel values.
 
 ---------------------------------------
+- Latest Result Date : 28/01/2023 | ADAM_RGB model is used
 
-- Latest Result Date : 15/01/2023
+Original                   | Row By Row by 3x3 filter  |  Full Image by 3x3 filter
+:-------------------------:|:-------------------------:|:-------------------------:
+![test](https://user-images.githubusercontent.com/76731692/210861435-ad89748d-e9e8-4989-bbd5-3ca8c0e45ca6.jpg) | ![rowByrow](https://user-images.githubusercontent.com/76731692/215285183-108e6437-c84f-49c1-8285-5818aa1ad145.png) | ![fullImage](https://user-images.githubusercontent.com/76731692/215285190-e6b8819d-98bd-4a40-b357-0c98a4ed83ff.png)
+
+---------------------------------------
+
+- Latest Result Date : 15/01/2023 | "model" model is used
 
 Original                   | Row By Row by 3x3 filter  |  Full Image by 3x3 filter
 :-------------------------:|:-------------------------:|:-------------------------:
@@ -68,7 +75,7 @@ Original                   | Row By Row by 3x3 filter  |  Full Image by 3x3 filt
 ---------------------------------------
 
 
-- Latest Result Date : 11/01/2023
+- Latest Result Date : 11/01/2023 | "model" model is used
 
 Original                   | Row By Row by 3x3 filter  |  Full Image by 3x3 filter
 :-------------------------:|:-------------------------:|:-------------------------:
@@ -76,7 +83,7 @@ Original                   | Row By Row by 3x3 filter  |  Full Image by 3x3 filt
 
 ---------------------------------------
 
-- Latest Result Date : 10/01/2023
+- Latest Result Date : 10/01/2023 | "model" model is used
 
 Original                   | Row By Row by 3x3 filter  |  Full Image by 3x3 filter
 :-------------------------:|:-------------------------:|:-------------------------:
@@ -84,7 +91,7 @@ Original                   | Row By Row by 3x3 filter  |  Full Image by 3x3 filt
 
 ---------------------------------------
 
-- Latest Result Date : 05/01/2023
+- Latest Result Date : 05/01/2023 | "model" model is used
 
 Original                   | Row By Row by 3x3 filter  |  Full Image by 3x3 filter
 :-------------------------:|:-------------------------:|:-------------------------:
