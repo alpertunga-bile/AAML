@@ -36,7 +36,7 @@ class MergeDataset:
             if "level_0" in dataframe:
                 dataframe.drop("level_0", inplace=True, axis=1)
 
-        dataframe.to_pickle('dataset.pkl', compression='bz2')
+        dataframe.to_pickle('dataset.pkl', compression='gzip')
 
         print("Saving datasets into zip file ...")
         zipObject = ZipFile('dataset.zip', 'w', ZIP_DEFLATED, compresslevel=6)
