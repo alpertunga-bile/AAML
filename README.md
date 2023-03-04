@@ -58,6 +58,12 @@
 - At the full image version, model predicts with all of the original image's pixel values then changes the pixel values.
 
 ---------------------------------------
+- Latest Result Date : 04/03/2023 | ADAM_RGB model is used
+
+Original                   | Row By Row by 3x3 filter  |  Full Image by 3x3 filter
+:-------------------------:|:-------------------------:|:-------------------------:
+![test](https://user-images.githubusercontent.com/76731692/210861435-ad89748d-e9e8-4989-bbd5-3ca8c0e45ca6.jpg) | ![row](https://user-images.githubusercontent.com/76731692/222907323-e7f3663a-8fc8-4584-8c4d-f1f797022025.png) | ![full](https://user-images.githubusercontent.com/76731692/222907349-fb7e658e-9713-4ea1-971a-b9de790df884.png)
+---------------------------------------
 - Latest Result Date : 28/01/2023 | ADAM_RGB model is used
 
 Original                   | Row By Row by 3x3 filter  |  Full Image by 3x3 filter
