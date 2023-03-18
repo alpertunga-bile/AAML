@@ -6,7 +6,11 @@
 
 - [x] For this project PNG, JPG and JPEG image files can be used for the dataset.
 
-- [x] At this point, it is important to enlarge the data set. After that, training will be done using the machine learning model and dataset then tests will be done on many pictures. At 28/01/2023, there are nearly 200.000.000 rows of data. The data is splitted into 5 datasets. Each dataset has unique rows in themselves. Therefore each dataset can be used as single datasets. In traning, the datasets are selected as random.   
+- [x] At this point, it is important to enlarge the data set. After that, training will be done using the machine learning model and dataset then tests will be done on many pictures. 
+
+- [ ] At 28/01/2023, there are nearly 200.000.000 rows of data. The data is splitted into 5 datasets. Each dataset has unique rows in themselves. Therefore each dataset can be used as single datasets. In training, the datasets are selected as random.
+
+- [ ] At 18/03/2023, there are nearly 380.000.000 rows of data. The data is splitted into 10 datasets. Each dataset has unique rows in themselves. Therefore each dataset can be used as single datasets. In training, the datasets are selected as random.       
 
 - [x] Currently "ADAM_RGB", "model" and "RMSPROP_RGBA" are trained. The training is ongoing.
 
