@@ -3,6 +3,7 @@ from project_vars import (
     dataset_compression,
     dataset_compression_level,
     dataset_folder,
+    dataset_max_row_count,
     get_dataset_version_regex,
 )
 from polars import DataFrame, UInt8, Series, read_parquet
@@ -14,12 +15,12 @@ from typing import OrderedDict
 class Dataset:
     _dataframe: DataFrame = None
     _dataset_name: str = None
+    _latest_version: int = 0
 
     def __init__(self) -> None:
         self._dataframe = self.__create_default_dataset()
-
-        latest_version = self.__get_latest_version()
-        self._dataset_name = f"dataset_{latest_version}.parquet"
+        self._latest_version = self.__get_latest_version()
+        self._dataset_name = f"dataset_{self._latest_version}.parquet"
 
         self.__read_dataframe()
 
@@ -42,6 +43,8 @@ class Dataset:
 
         self._dataframe.vstack(temp_dataframe, in_place=True)
 
+        self.__save_if()
+
     def add_multiple_rows(self, values: OrderedDict[str, list[UInt8]]) -> None:
         series = []
 
@@ -49,20 +52,21 @@ class Dataset:
             series.append(Series(name=col_name, values=pixel_values, dtype=UInt8))
 
         self._dataframe.vstack(DataFrame(series), in_place=True)
-        self.__drop_duplicates()
 
-    def save(self) -> None:
-        self.__drop_duplicates()
+        self.__save_if()
 
-        dataset_path = join(dataset_folder, self._dataset_name)
+    def __save(self, dataset: DataFrame, name: str) -> None:
+        dataset = dataset.unique()
 
-        self._dataframe.write_parquet(
+        dataset_path = join(dataset_folder, name)
+
+        dataset.write_parquet(
             file=dataset_path,
             compression=dataset_compression,
             compression_level=dataset_compression_level,
         )
 
-        print(f"{self._dataset_name} is saved to datasets folder")
+        print(f"{name} is saved to datasets folder")
 
     def __read_dataframe(self) -> None:
         dataset_path = join(dataset_folder, self._dataset_name)
@@ -87,6 +91,7 @@ class Dataset:
         return DataFrame(series)
 
     def __get_latest_version(self) -> int:
+        # if there are no datasets, return 0
         versions = [0]
 
         for dataset in listdir(dataset_folder):
@@ -94,5 +99,17 @@ class Dataset:
 
         return max(versions)
 
-    def __drop_duplicates(self) -> None:
+    def __save_if(self) -> None:
         self._dataframe = self._dataframe.unique()
+
+        if dataset_max_row_count < len(self._dataframe):
+            return
+
+        self.__save(self._dataframe.slice(1, dataset_max_row_count), self._dataset_name)
+
+        print(f"{self._dataset_name} is saved")
+
+        self._dataset_name = f"dataset_{self._latest_version + 1}.parquet"
+        self._dataframe = self._dataframe.slice(dataset_max_row_count)
+
+        print(f"Continuing with {self._dataset_name}")
