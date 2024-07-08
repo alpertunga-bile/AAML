@@ -8,7 +8,7 @@ from project_vars import (
 )
 from polars import DataFrame, UInt8, Series, read_parquet
 from os import listdir
-from os.path import join
+from os.path import join, exists
 from typing import OrderedDict
 
 
@@ -55,6 +55,11 @@ class Dataset:
 
         self.__save_if()
 
+    def save(self) -> None:
+        self.__save_if()
+        # save the splitted dataset
+        self.__save(self._dataframe, self._dataset_name)
+
     def __save(self, dataset: DataFrame, name: str) -> None:
         dataset = dataset.unique()
 
@@ -66,10 +71,13 @@ class Dataset:
             compression_level=dataset_compression_level,
         )
 
-        print(f"{name} is saved to datasets folder")
+        print(f"{name} is saved to {dataset_folder} folder")
 
     def __read_dataframe(self) -> None:
         dataset_path = join(dataset_folder, self._dataset_name)
+        if exists(dataset_path) is False:
+            return
+
         self._dataframe = read_parquet(dataset_path)
 
     def __create_default_dataset(self) -> DataFrame:
@@ -107,9 +115,7 @@ class Dataset:
 
         self.__save(self._dataframe.slice(1, dataset_max_row_count), self._dataset_name)
 
-        print(f"{self._dataset_name} is saved")
-
         self._dataset_name = f"dataset_{self._latest_version + 1}.parquet"
-        self._dataframe = self._dataframe.slice(dataset_max_row_count)
+        self._dataframe = self._dataframe.slice(dataset_max_row_count + 1)
 
         print(f"Continuing with {self._dataset_name}")

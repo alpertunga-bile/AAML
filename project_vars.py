@@ -1,19 +1,22 @@
 from re import compile
 from math import floor
 
+# odd numbers are required
+dataset_kernel_one_length = 5
+
 dataset_compression = "zstd"
-dataset_compression_level = 20
-dataset_max_row_count = 1000000
+dataset_compression_level = 22
+dataset_max_row_count = 10_000_000
 
 dataset_folder = "datasets"
 images_folder = "images"
 videos_folder = "videos"
 
+images_used_images_file = "used_images.txt"
+
 
 get_dataset_version_regex = compile(r"\d+")
 
-# odd numbers are required
-dataset_kernel_one_length = 7
 
 dataset_columns = []
 
