@@ -102,7 +102,7 @@ class Dataset:
     def __save_if(self) -> None:
         self._dataframe = self._dataframe.unique()
 
-        if dataset_max_row_count < len(self._dataframe):
+        if self._dataframe.height < dataset_max_row_count:
             return
 
         self.__save(self._dataframe.slice(1, dataset_max_row_count), self._dataset_name)
