@@ -1,5 +1,6 @@
 dataset_compression = "zstd"
 dataset_compression_level = 15
+dataset_max_row_count = 1000000
 
 dataset_folder = "datasets"
 images_folder = "images"
