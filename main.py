@@ -1,25 +1,17 @@
 from argparse import ArgumentParser
-from os import makedirs
-from project_vars import (
-    dataset_folder,
-    images_folder,
-    videos_folder,
-    set_dataset_columns,
-)
-
 from dataset import Dataset
 from aaml import AAML
+from project_vars import DatasetVars
 
 if __name__ == "__main__":
-    makedirs(images_folder, exist_ok=True)
-    makedirs(videos_folder, exist_ok=True)
-    makedirs(dataset_folder, exist_ok=True)
+    dataset_vars = DatasetVars()
 
-    set_dataset_columns()
-
-    parser = ArgumentParser()
+    parser = ArgumentParser(
+        prog="AAML",
+        description="Trying to solve the anti aliasing problem with the machine learning algorithms",
+    )
     parser.add_argument(
-        "--info", action="store_true", help="Get info about the latest dataset"
+        "-i", "--info", action="store_true", help="Get info about the latest dataset"
     )
     parser.add_argument(
         "-rc",
@@ -28,7 +20,48 @@ if __name__ == "__main__":
         help="Printed row count for the info",
         default=5,
     )
+    parser.add_argument(
+        "--kernel_length",
+        action="store",
+        help="Kernel width or height of the squared kernel",
+        default=dataset_vars.kernel_length,
+    )
+    parser.add_argument(
+        "-df",
+        "--dataset_folder",
+        action="store",
+        help="Dataset folder to locate and save datasets",
+        default=dataset_vars.dataset_folder,
+    )
+    parser.add_argument(
+        "-if",
+        "--images_folder",
+        action="store",
+        help="Image folder to locate the images",
+        default=dataset_vars.images_folder,
+    )
+    parser.add_argument(
+        "-vf",
+        "--videos_folder",
+        action="store",
+        help="Video folder to locate the videos",
+        default=dataset_vars.videos_folder,
+    )
+    parser.add_argument(
+        "-del",
+        "--delete",
+        action="store_true",
+        help="Delete the used images from the images folder",
+        default=False,
+    )
     args = parser.parse_args()
+
+    dataset_vars.kernel_length = int(args.kernel_length)
+    dataset_vars.dataset_folder = args.dataset_folder
+    dataset_vars.images_folder = args.images_folder
+    dataset_vars.videos_folder = args.videos_folder
+
+    dataset_vars.setup()
 
     if args.info:
         row_count = int(args.row_count)
@@ -36,3 +69,6 @@ if __name__ == "__main__":
         print(" Dataset Informations ".center(100, "-"))
         dataset.print_head(row_count)
         dataset.print_info()
+
+    aaml = AAML(dataset_vars)
+    aaml.start(args.delete)

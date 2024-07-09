@@ -1,6 +1,5 @@
 from PIL import Image
 from os.path import exists, join
-from project_vars import images_folder
 
 
 class Texture:
@@ -8,7 +7,7 @@ class Texture:
     width = 0
     height = 0
 
-    def __init__(self, filename: str) -> None:
+    def __init__(self, filename: str, images_folder: str) -> None:
         image_path = join(images_folder, filename)
 
         if exists(image_path) is False:

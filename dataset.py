@@ -1,9 +1,5 @@
 from project_vars import (
-    dataset_columns,
-    dataset_compression,
-    dataset_compression_level,
-    dataset_folder,
-    dataset_max_row_count,
+    DatasetVars,
     get_dataset_version_regex,
 )
 from polars import DataFrame, UInt8, Series, read_parquet
@@ -13,11 +9,13 @@ from typing import OrderedDict
 
 
 class Dataset:
+    dataset_vars: DatasetVars = None
     _dataframe: DataFrame = None
     _dataset_name: str = None
     _latest_version: int = 0
 
-    def __init__(self) -> None:
+    def __init__(self, dataset_vars: DatasetVars) -> None:
+        self.dataset_vars = dataset_vars
         self._dataframe = self.__create_default_dataset()
         self._latest_version = self.__get_latest_version()
         self._dataset_name = f"dataset_{self._latest_version}.parquet"
@@ -63,18 +61,18 @@ class Dataset:
     def __save(self, dataset: DataFrame, name: str) -> None:
         dataset = dataset.unique()
 
-        dataset_path = join(dataset_folder, name)
+        dataset_path = join(self.dataset_vars.dataset_folder, name)
 
         dataset.write_parquet(
             file=dataset_path,
-            compression=dataset_compression,
-            compression_level=dataset_compression_level,
+            compression=self.dataset_vars.compression,
+            compression_level=self.dataset_vars.compression_level,
         )
 
-        print(f"{name} is saved to {dataset_folder} folder")
+        print(f"{name} is saved to {self.dataset_vars.dataset_folder} folder")
 
     def __read_dataframe(self) -> None:
-        dataset_path = join(dataset_folder, self._dataset_name)
+        dataset_path = join(self.dataset_vars.dataset_folder, self._dataset_name)
         if exists(dataset_path) is False:
             return
 
@@ -87,13 +85,13 @@ class Dataset:
         series = []
 
         if values is not None:
-            assert len(values) == len(dataset_columns)
+            assert len(values) == len(self.dataset_vars.dataset_columns)
 
         if values is None:
-            for col_name in dataset_columns:
+            for col_name in self.dataset_vars.dataset_columns:
                 series.append(Series(name=col_name, dtype=UInt8))
         else:
-            for col_name, value in zip(dataset_columns, values):
+            for col_name, value in zip(self.dataset_vars.dataset_columns, values):
                 series.append(Series(name=col_name, values=[value], dtype=UInt8))
 
         return DataFrame(series)
@@ -102,7 +100,7 @@ class Dataset:
         # if there are no datasets, return 0
         versions = [0]
 
-        for dataset in listdir(dataset_folder):
+        for dataset in listdir(self.dataset_vars.dataset_folder):
             versions.extend(list(map(int, get_dataset_version_regex.findall(dataset))))
 
         return max(versions)
@@ -110,12 +108,15 @@ class Dataset:
     def __save_if(self) -> None:
         self._dataframe = self._dataframe.unique()
 
-        if self._dataframe.height < dataset_max_row_count:
+        if self._dataframe.height < self.dataset_vars.max_row_count:
             return
 
-        self.__save(self._dataframe.slice(1, dataset_max_row_count), self._dataset_name)
+        self.__save(
+            self._dataframe.slice(1, self.dataset_vars.max_row_count),
+            self._dataset_name,
+        )
 
         self._dataset_name = f"dataset_{self._latest_version + 1}.parquet"
-        self._dataframe = self._dataframe.slice(dataset_max_row_count + 1)
+        self._dataframe = self._dataframe.slice(self.dataset_vars.max_row_count + 1)
 
         print(f"Continuing with {self._dataset_name}")
