@@ -1,7 +1,13 @@
 from argparse import ArgumentParser
-from dataset import Dataset, TorchDataset
+from dataset import Dataset
+from torch_dataset import TorchDataset
 from aaml import AAML
 from project_vars import DatasetVars
+from torch_model import TorchModel
+
+from torch.nn import MSELoss
+from torch.optim import AdamW
+from torch.utils.data import DataLoader
 
 if __name__ == "__main__":
     dataset_vars = DatasetVars()
@@ -84,8 +90,18 @@ if __name__ == "__main__":
 
     torch_dataset = TorchDataset("datasets/dataset_0.parquet")
 
-    predict_vals, middle_vals = next(iter(torch_dataset))
+    torch_dataloader = DataLoader(
+        dataset=torch_dataset, batch_size=32, num_workers=8, shuffle=True
+    )
 
-    predict_vals = predict_vals.unsqueeze(1)
+    model = TorchModel(dataset_vars.kernel_length)
+    loss_fn = MSELoss()
+    optimizer = AdamW(params=model.parameters(), lr=0.001)
+
+    predict_vals, middle_vals = next(iter(torch_dataloader))
+
+    y = model(predict_vals)
+
+    print(y)
 
     print(predict_vals.shape)

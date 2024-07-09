@@ -2,10 +2,13 @@ from re import compile
 from math import floor
 from dataclasses import dataclass
 from os import makedirs
+from torch.cuda import is_available
 
 get_dataset_version_regex = compile(r"\d+")
 
 images_used_images_file = "used_images.txt"
+
+torch_device = "cuda" if is_available() else "cpu"
 
 
 @dataclass
