@@ -6,6 +6,7 @@ from polars import DataFrame, UInt8, Series, read_parquet
 from os import listdir
 from os.path import join, exists
 from typing import OrderedDict
+from torch.utils.data.dataset import Dataset as torch_Dataset
 
 
 class Dataset:
@@ -120,3 +121,34 @@ class Dataset:
         self._dataframe = self._dataframe.slice(self.dataset_vars.max_row_count + 1)
 
         print(f"Continuing with {self._dataset_name}")
+
+
+from torch import Tensor, tensor
+from typing import Tuple
+
+
+class TorchDataset(torch_Dataset):
+    def __init__(self, dataset_path) -> None:
+        super().__init__()
+
+        self._dataset = read_parquet(dataset_path)
+
+    def __len__(self) -> int:
+        return self._dataset.height
+
+    def __getitem__(self, index: int) -> Tuple[Tensor, Tensor]:
+        row_dict = self._dataset.rows(named=True)[index]
+
+        predict_values = []
+        middle_values = []
+
+        for col_name, value in row_dict.items():
+            if col_name.startswith("middle"):
+                middle_values.append(value / 255.0)
+            else:
+                predict_values.append(value / 255.0)
+
+        predict_tensor = tensor(predict_values)
+        middle_values = tensor(middle_values)
+
+        return (predict_tensor, middle_values)
