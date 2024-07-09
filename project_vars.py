@@ -2,7 +2,7 @@ from re import compile
 from math import floor
 
 # odd numbers are required
-dataset_kernel_one_length = 5
+dataset_kernel_one_length = 3
 
 dataset_compression = "zstd"
 dataset_compression_level = 22

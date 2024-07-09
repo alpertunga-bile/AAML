@@ -59,13 +59,15 @@ class AAML:
                     remove(image_filepath)
                 continue
 
-            pixel_list = []
             image = Texture(image_filename)
+            pixel_list = [None] * (
+                image.width * image.height * 4 * len(dataset_columns)
+            )
 
             for y in tqdm(range(0, image.height), desc=f"{image_filename}"):
                 for x in range(0, image.width):
 
-                    for height_iter in range(-1 * div_by_two, div_by_two + 1):
+                    for height_iter in range(div_by_two, (-1 * div_by_two) - 1, -1):
                         for width_iter in range(-1 * div_by_two, div_by_two + 1):
                             pixel_list.extend(
                                 image.get_pixel(x + width_iter, y + height_iter)
