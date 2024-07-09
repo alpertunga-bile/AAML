@@ -29,7 +29,7 @@ class Dataset:
             print("Dataset is not exists")
             return
 
-        print(self._dataframe.glimpse())
+        print(self._dataframe.glimpse(return_as_string=True))
 
     def print_head(self, row_count: int = 5) -> None:
         if self._dataframe is None:

@@ -7,6 +7,7 @@ from project_vars import (
     set_dataset_columns,
 )
 
+from dataset import Dataset
 from aaml import AAML
 
 if __name__ == "__main__":
@@ -16,12 +17,22 @@ if __name__ == "__main__":
 
     set_dataset_columns()
 
-    """
     parser = ArgumentParser()
     parser.add_argument(
         "--info", action="store_true", help="Get info about the latest dataset"
     )
-    """
+    parser.add_argument(
+        "-rc",
+        "--row_count",
+        action="store",
+        help="Printed row count for the info",
+        default=5,
+    )
+    args = parser.parse_args()
 
-    aaml = AAML()
-    aaml.start()
+    if args.info:
+        row_count = int(args.row_count)
+        dataset = Dataset()
+        print(" Dataset Informations ".center(100, "-"))
+        dataset.print_head(row_count)
+        dataset.print_info()
